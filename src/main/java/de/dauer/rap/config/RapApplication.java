@@ -13,7 +13,6 @@ public class RapApplication {
 		SpringApplication.run(RapApplication.class, args);
 		System.out.println("Hello world!");
 	}
-
 }
 
 
