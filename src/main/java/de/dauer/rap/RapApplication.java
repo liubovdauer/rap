@@ -4,8 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RestController;
 
-@SpringBootApplication
-@RestController
+@SpringBootApplication(scanBasePackages = "de.dauer.rap.antrag")
 public class RapApplication {
 
 	public static void main(String[] args) {
