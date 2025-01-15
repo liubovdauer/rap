@@ -17,6 +17,18 @@ public class Person {
     @Valid
     private String nachname;
 
+    @Schema(name="businessPartnerId", example="HZGF65R", required=false)
+    @Valid
+    private String businessPartnerId;
+
+    public @Valid String getBusinessPartnerId() {
+        return businessPartnerId;
+    }
+
+    public void setBusinessPartnerId(@Valid String businessPartnerId) {
+        this.businessPartnerId = businessPartnerId;
+    }
+
     public String getVorname(){
         return vorname;
     }

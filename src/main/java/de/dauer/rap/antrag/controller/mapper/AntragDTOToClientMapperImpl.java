@@ -23,6 +23,7 @@ public class AntragDTOToClientMapperImpl implements AntragDTOToClientMapper{
         Antrag antrag= new Antrag();
         Person person=new Person();
         person.setVorname(antragDTO.getPartnerDTO().getVorname());
+        person.setBusinessPartnerId(antragDTO.getPartnerDTO().getBusinessPartnerId());
         person.setNachname(antragDTO.getPartnerDTO().getName());
         antrag.setPerson(person);
 
