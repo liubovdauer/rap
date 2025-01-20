@@ -28,10 +28,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.Charset;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -93,40 +95,10 @@ class AntragControllerTest {
                 .content(antragAsJson))
                 //Then
                 .andExpect(status().isBadRequest());
-
     }
 
     @Test
-    @DisplayName("Wenn Path Parameter < 10000, muss Bad Request zurück geliefert werden")
-    void testAntragLesenId0() throws Exception {
-
-        //when
-        AntragDTO antragDTO = new AntragDTO();
-        PartnerDTO partnerDTO = new PartnerDTO();
-        partnerDTO.setVorname("Artur");
-        partnerDTO.setName("Dauer");
-        antragDTO.setPartnerDTO(partnerDTO);
-        int id = 1;
-        Antrag antrag=new Antrag();
-        Person person=new Person();
-        person.setVorname("Artur");
-        person.setNachname("Dauer");
-        antrag.setPerson(person);
-        when(!antragService.istAntragIdValid(id)).thenReturn(Boolean.FALSE);
-        when(antragService.leseAntrag(id)).thenReturn(antragDTO);
-        when(antragDTOToClientMapper.mapAntragDTOToClient(antragDTO)).thenReturn(antrag);
-
-
-        //Act
-        mvc.perform(MockMvcRequestBuilders.get("/antrag/{id}",id)
-                                          .accept(MediaType.APPLICATION_JSON))
-                //Then Bad Request is expexted
-                                          .andExpect(status().isBadRequest());
-
-    }
-
-    @Test
-    @DisplayName("Wenn Path Parameter = 10000, muss Bad Request zurück geliefert werden")
+    @DisplayName("Wenn Path Parameter = 0, muss Bad Request zurück geliefert werden")
     void testAntragLesenId10000() throws Exception {
 
         //when
@@ -135,7 +107,7 @@ class AntragControllerTest {
         partnerDTO.setVorname("Artur");
         partnerDTO.setName("Dauer");
         antragDTO.setPartnerDTO(partnerDTO);
-        int id = 10000;
+        int id = 0;
         Antrag antrag=new Antrag();
         Person person=new Person();
         person.setVorname("Artur");
@@ -155,7 +127,7 @@ class AntragControllerTest {
     }
 
     @Test
-    @DisplayName("Wenn Path Parameter > 10000, muss Antrag zurück geliefert werden")
+    @DisplayName("Wenn Path Parameter > 0, muss Antrag zurück geliefert werden")
     void testAntragLesenId10001() throws Exception {
 
         //when
@@ -164,7 +136,7 @@ class AntragControllerTest {
         partnerDTO.setVorname("Artur");
         partnerDTO.setName("Dauer");
         antragDTO.setPartnerDTO(partnerDTO);
-        int id = 10001;
+        int id = 1;
         Antrag antrag=new Antrag();
         Person person=new Person();
         person.setVorname("Artur");
@@ -181,5 +153,33 @@ class AntragControllerTest {
                 //Then Bad Request is expexted
                 .andExpect(status().isOk());
 
+    }
+
+    @Test
+    @DisplayName("Wenn Antrag nicht vorhanden ist, muss 404 Not found zurückgeliefert werden")
+    void test_AntragLesen404() throws Exception{
+//       when
+
+        int id = 12;
+        Antrag antrag=new Antrag();
+        Person person=new Person();
+        person.setVorname("Artur");
+        person.setNachname("Dauer");
+        antrag.setPerson(person);
+
+        String antragAsJson = objectMapper.writeValueAsString(antrag);
+
+     when(antragService.istAntragIdValid(id)).thenReturn(true);
+     when(antragService.leseAntrag(id)).thenReturn(null);
+
+//        act
+
+//        then
+        mvc.perform(MockMvcRequestBuilders.get("/antrag/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(antragAsJson))
+                .andExpect(status()
+                        .isNotFound());
+        verify(antragDTOToClientMapper, times(0)).mapAntragDTOToClient(any());
     }
 }

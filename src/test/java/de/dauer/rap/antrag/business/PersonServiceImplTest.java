@@ -106,5 +106,19 @@ class PersonServiceImplTest {
         assertThat(personService.konvertireName(vorname,nachname)).isEqualTo(vollName);
     }
 
+    @ParameterizedTest
+    @MethodSource("konvertiereNameNew")
+    void test_konvertiereNameMussVolleNameBilden(String vorname, String nachname, String vollName){
+        assertThat(personService.konvertireName(vorname,nachname)).isEqualTo(vollName);
+    }
+
+    private static Stream<Arguments> konvertiereNameNew(){
+        return Stream.of(
+                Arguments.of(null,null,null),
+                Arguments.of(null,"Ivanov","Ivanov"),
+                Arguments.of("Ivan", null,"Ivan"),
+                Arguments.of("Ivan","Ivanov","Ivan Ivanov")
+        );
+    }
 
 }

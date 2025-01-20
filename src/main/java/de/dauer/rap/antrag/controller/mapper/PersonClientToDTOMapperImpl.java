@@ -22,6 +22,7 @@ public class PersonClientToDTOMapperImpl implements PersonClientToDTOMapper{
         partnerDTO.setName(person.getNachname());
         partnerDTO.setVorname(person.getVorname());
         partnerDTO.setVollName(personService.konvertireName(person.getVorname(), person.getNachname()));
+        partnerDTO.setBusinessPartnerId(person.getBusinessPartnerId());
         return partnerDTO;
     }
 }

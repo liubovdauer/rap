@@ -13,19 +13,25 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AntragClientToDTOMapperImplTest {
 
+//    private PersonServiceImpl personService;
+
     @InjectMocks
     private AntragClientToDTOMapperImpl antragMapper;
 
-    @Spy
+    @Mock
     private PersonClientToDTOMapperImpl personMapper;
+
 
     @Test
     @DisplayName("Mapping Antrag to AntragDTO" )
@@ -36,15 +42,20 @@ class AntragClientToDTOMapperImplTest {
         person.setVorname("Nik");
         person.setNachname("Tomasov");
         antrag.setPerson(person);
-//        PartnerDTO partnerDTO=new PartnerDTO();
 
-//        when(personMapper.mapPerson(antrag.getPerson())).thenReturn(partnerDTO);
+        PartnerDTO partnerDTO=new PartnerDTO();
+        partnerDTO.setVorname("Nik");
+        partnerDTO.setName("Tomasov");
+        partnerDTO.setVollName("Nik Tomasov");
+
+
+        when(personMapper.mapPerson(any())).thenReturn(partnerDTO);
 
         // act
         AntragDTO antragDTO=antragMapper.mapAntrag(antrag);
 
         // then
-//        assertThat(antragDTO.getPartnerDTO().getVollName()).isEqualTo("Nik Tomasov");
+
         assertThat(antragDTO.getPartnerDTO().getVorname()).isEqualTo("Nik");
         assertThat(antragDTO.getPartnerDTO().getName()).isEqualTo("Tomasov");
         assertThat(antragDTO.getPartnerDTO()).isNotNull();

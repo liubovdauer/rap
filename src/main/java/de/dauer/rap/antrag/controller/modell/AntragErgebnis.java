@@ -7,8 +7,8 @@ public class AntragErgebnis {
     @Schema(name = "istGenehmigt", example = "true", required = true)
     private boolean istGenehmigt;
 
-    @Schema(name = "businessPartnerId", example = "T12H7858874FR", required = false)
-    private String businessPartnerId;
+    @Schema(name = "antragsNummer", example = "T12H7858874FR", required = false)
+    private String antragsNummer;
 
     @Schema(name = "antragId", example = "123456789542", required = false)
     private Long antragId;
@@ -21,12 +21,12 @@ public class AntragErgebnis {
         return istGenehmigt;
     }
 
-    public void setBusinessPartnerId(String businessPartnerId){
-        this.businessPartnerId=businessPartnerId;
+    public void setAntragsNummer(String businessPartnerId){
+        this.antragsNummer=businessPartnerId;
     }
 
-    public String getBusinessPartnerId(){
-        return businessPartnerId;
+    public String getAntragsNummer(){
+        return antragsNummer;
     }
 
     public void setAntragId(Long antragId) {

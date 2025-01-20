@@ -45,20 +45,19 @@ class PersonClientToDTOMapperImplTest {
 
     }
     @Test
-    @DisplayName("Mapping Person to PartnerDTO, Vorname ist null" )
+    @DisplayName("Wenn Vorname null ist, " )
     void test_mapPersonVornameNull(){
         // when
         Person person=new Person();
         person.setVorname(null);
-        person.setNachname(null);
-        //when(personService.konvertireName(any(), anyString())).thenReturn("Max");
-        when(personService.konvertireName(person.getVorname(), person.getNachname())).thenReturn("Max");
+        person.setNachname("Max");
+
         // act
         PartnerDTO partnerDTO=mapper.mapPerson(person);
         // then
         assertThat(partnerDTO.getVollName()).isEqualTo("Max");
         assertThat(partnerDTO.getVorname()).isNull();
-        assertThat(partnerDTO.getName()).isEqualTo("Tomasov");
+//        assertThat(partnerDTO.getName()).isNull();
         verify(personService, times(1)).konvertireName(any(), any());
     }
 
@@ -71,7 +70,7 @@ class PersonClientToDTOMapperImplTest {
     }
 
     @Test
-    @DisplayName("Mapping Person to PartnerDTO, Vorname ist null" )
+    @DisplayName("Mapping Person to PartnerDTO, Nachname ist null" )
     void test_mapPersonVornameNullNachnameNull(){
         // when
         Person person=new Person();

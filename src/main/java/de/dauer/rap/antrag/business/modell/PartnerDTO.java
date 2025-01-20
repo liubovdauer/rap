@@ -5,6 +5,15 @@ public class PartnerDTO {
     private String vorname;
     private String name;
     private String vollName;
+    private String businessPartnerId;
+
+    public String getBusinessPartnerId() {
+        return businessPartnerId;
+    }
+
+    public void setBusinessPartnerId(String businessPartnerId) {
+        this.businessPartnerId = businessPartnerId;
+    }
 
     public void setVorname(String vorname){
         this.vorname=vorname;
