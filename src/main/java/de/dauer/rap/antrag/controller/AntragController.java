@@ -20,6 +20,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static java.util.Objects.isNull;
+
 @RestController
 @RequestMapping("/antrag")
 public class AntragController {
@@ -43,15 +45,14 @@ public class AntragController {
     @GetMapping("/{id}")
     public ResponseEntity<Antrag> antragIdLesen(@PathVariable int id){
 
-        /*if (antragService.istAntragIdValid(id)) {
-            Antrag antragClient = null;
-            return ResponseEntity.ok().body(antragClient);
-        }
-        return ResponseEntity.badRequest().build();*/
+
         if (!antragService.istAntragIdValid(id)){
             return ResponseEntity.badRequest().build();
         }
         AntragDTO antragDTO= antragService.leseAntrag(id);
+        if(isNull(antragDTO)){
+            return ResponseEntity.notFound().build();
+        }
         Antrag antrag=antragDTOToClientMapper.mapAntragDTOToClient(antragDTO);
 
         return ResponseEntity.ok().body(antrag);

@@ -63,7 +63,7 @@ class AntragServiceImpl implements AntragService {
 
     @Override
     public boolean istAntragIdValid(int antragId) {
-        return antragId>1;
+        return antragId>0;
     }
 
     @Override
