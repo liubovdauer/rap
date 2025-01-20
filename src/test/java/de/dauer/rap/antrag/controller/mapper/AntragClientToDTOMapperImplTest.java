@@ -32,16 +32,6 @@ class AntragClientToDTOMapperImplTest {
     @Mock
     private PersonClientToDTOMapperImpl personMapper;
 
-//    @BeforeEach
-//    void setup(){
-////        Antrag antrag=new Antrag();
-////        Person person=new Person();
-////        person.setVorname("Nik");
-////        person.setNachname("Tomasov");
-////        antrag.setPerson(person);
-////        PartnerDTO partnerDTO=personMapper.mapPerson(person);
-//        personService.konvertireName("Nik","Tomasov");
-//    }
 
     @Test
     @DisplayName("Mapping Antrag to AntragDTO" )
@@ -65,7 +55,7 @@ class AntragClientToDTOMapperImplTest {
         AntragDTO antragDTO=antragMapper.mapAntrag(antrag);
 
         // then
-//        assertThat(antragDTO.getPartnerDTO().getVollName()).isEqualTo("Nik Tomasov");
+
         assertThat(antragDTO.getPartnerDTO().getVorname()).isEqualTo("Nik");
         assertThat(antragDTO.getPartnerDTO().getName()).isEqualTo("Tomasov");
         assertThat(antragDTO.getPartnerDTO()).isNotNull();

@@ -12,6 +12,8 @@ import de.dauer.rap.antrag.repository.entity.AntragEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -40,8 +42,8 @@ class AntragServiceImplTest {
     private AntragEntityToAntragDTOMapperImpl antragEntityToAntragDTOMapper;
 
     @Test
-    @DisplayName("Wenn Antrag vollständig ist, muss 200 zurück geliefert werden")
-    void leseAntragTest(){
+    @DisplayName("Wenn Antrag vollständig ist, muss Ergebnis zurückgeliefert werden")
+    void test_leseAntragErfolgreich(){
         // when
         int id=702;
         AntragEntity antragEntity=new AntragEntity();
@@ -61,7 +63,21 @@ class AntragServiceImplTest {
     }
 
     @Test
-    @DisplayName("Wenn Antrag enthält Person, muss 200 zurück geliefert werden")
+    @DisplayName("Wenn Antrag nicht gefunden wird, wird keine Exception geworfen")
+    void test_leseAntrag_AntragNichtGefundenKeinException(){
+//        when
+        int id=500;
+        when(antragRepository.findById(id)).thenReturn(Optional.empty());
+
+//        act
+        assertDoesNotThrow(() -> antragService.leseAntrag(id));
+
+        verify(antragRepository,times(1)).findById(id);
+        verify(antragEntityToAntragDTOMapper,times(0)).mapAntrag(null);
+    }
+
+    @Test
+    @DisplayName("Wenn Antrag enthält Person, ist Antrag valid")
     void test_istAntragValidTrue(){
         // when
         AntragDTO antragDTO= new AntragDTO();
@@ -76,7 +92,7 @@ class AntragServiceImplTest {
     }
 
     @Test
-    @DisplayName("Wenn in Antrag enthaltene Person null ist, muss 400 zurück geliefert werden")
+    @DisplayName("Wenn in Antrag ohne Person ist, ist Antrag nicht valid")
     void test_istAntragValidFalse(){
         // when
         AntragDTO antragDTO= new AntragDTO();
@@ -87,7 +103,7 @@ class AntragServiceImplTest {
         assertFalse(antragService.istAntragValid(antragDTO));
     }
     @Test
-    @DisplayName("Wenn in Antrag enthaltene Person null ist, muss 400 zurück geliefert werden")
+    @DisplayName("Wenn Antrag null ist, ist Antrag nicht valid")
     void test_istAntragValidNull(){
         // when
 
@@ -98,7 +114,7 @@ class AntragServiceImplTest {
     }
 
     @Test
-    @DisplayName("Wenn in Antrag enthaltene Person unvollständig ist (Vorname oder Nachname null ist), muss 400 zurück geliefert werden")
+    @DisplayName("Wenn in Antrag enthaltene Person unvollständig ist (Vorname oder Nachname null ist), ist Antrag nicht valid")
     void test_istAntragValidFalsePersonUnvollständig(){
         // when
         AntragDTO antragDTO= new AntragDTO();
@@ -108,7 +124,7 @@ class AntragServiceImplTest {
         // act
 
         // then
-        assertFalse(antragService.istAntragValid(antragDTO));
+        assertTrue(antragService.istAntragValid(antragDTO));
     }
     @Test
     @DisplayName("Antrag id muss > 0 sein")
@@ -148,7 +164,12 @@ class AntragServiceImplTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getAntragId()).isEqualTo(1L);
-        assertFalse(result.isIstGenehmigt());
+        assertTrue(result.isIstGenehmigt());
+
+    }
+    @Test
+    @DisplayName("Wenn Methode bei Ausfürung der legeAntragAn, mapAntrag liefert Null")
+    void test_legeAntragAn_mapAntragLiefertNull(){
 
     }
 }

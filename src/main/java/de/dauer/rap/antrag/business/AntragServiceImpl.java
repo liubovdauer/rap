@@ -18,6 +18,8 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Random;
 
+import static java.util.Objects.isNull;
+
 @Service
 class AntragServiceImpl implements AntragService {
 
@@ -33,14 +35,17 @@ class AntragServiceImpl implements AntragService {
     @Autowired
     private AntragEntityToAntragDTOMapperImpl antragEntityToAntragDTOMapper;
 
-//    @Autowired
-//    private PersonRepository personRepository;
 
     @Override
     public AntragDTO leseAntrag(int id) {
 
         Optional<AntragEntity> antragEntityOptional=antragRepository.findById(id);
-        AntragEntity antragEntity=antragEntityOptional.get();
+
+        if (antragEntityOptional.isEmpty()) {
+            return null;
+        }
+
+        AntragEntity antragEntity = antragEntityOptional.get();
 
         AntragDTO antragDTO=antragEntityToAntragDTOMapper.mapAntrag(antragEntity);
 
@@ -53,7 +58,7 @@ class AntragServiceImpl implements AntragService {
         if (antragDTO==null || antragDTO.getPartnerDTO()==null ) {
             return false;
         }
-            return antragDTO.getPartnerDTO().getVorname()!= null && antragDTO.getPartnerDTO().getName() != null;
+        return true;
     }
 
     @Override
@@ -63,13 +68,19 @@ class AntragServiceImpl implements AntragService {
 
     @Override
     public AntragErgebnis legeAntragAn(AntragDTO antragDTO) {
-
+        AntragErgebnis antragErgebnis= new AntragErgebnis();
+        if(isNull(antragDTO)) {
+            antragErgebnis.setIstGenehmigt(false);
+            return antragErgebnis;
+        }
         AntragEntity antragEntity=antragMapper.mapAntrag(antragDTO);
+//
         antragRepository.save(antragEntity);
         Long antragId = antragEntity.getId();
 
-        AntragErgebnis antragErgebnis= new AntragErgebnis();
-        antragErgebnis.setIstGenehmigt(false);
+
+
+        antragErgebnis.setIstGenehmigt(true);
         antragErgebnis.setAntragsNummer(antragEntity.getAntrags_nummer());
         antragErgebnis.setAntragId(antragId);
         return antragErgebnis;

@@ -29,6 +29,7 @@ public class AntragDTOToAntragEntityMapperImpl implements AntragDTOToAntragEntit
         antragEntity.setPerson(personEntity);
         antragEntity.setErstelldatum(LocalDate.now());
         antragEntity.setAntrags_nummer(randomBpId());
+        personEntity.setAntrag(antragEntity);
         return antragEntity;
     }
 
